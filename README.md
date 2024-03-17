@@ -1,2 +1,2 @@
 # CompilerDesign_LAB
-Collections of Full Stack Compiler Design Lab Practicals
+Collections of Compiler Design Lab Practicals

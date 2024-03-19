@@ -23,3 +23,19 @@ int main(){
 	
 	return 0;
 }
+
+
+//OUTPUT
+PS D:\C> flex as.l
+PS D:\C> gcc lex.yy.c
+PS D:\C> .\a.exe
+Enter the Sentence : aniruddh int joshi float
+IDENTIFIER: aniruddh
+KEYWORD: int
+IDENTIFIER: joshi
+KEYWORD: float
+^Z
+Number of lines : 1
+Number of spaces : 3
+Number of tabs, words, charc : 0 , 0 , 4
+PS D:\C>

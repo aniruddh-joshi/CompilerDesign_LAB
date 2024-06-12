@@ -1,14 +1,16 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
+#include <unordered_set>
 using namespace std;
 
 // Function to check if a string is a keyword
 bool isKeyword(const string& str) {
-    static const vector<string> keywords = {"auto", "break", "case", "char", "const", "continue", "default", 
+    static const unordered_set<string> keywords = {"auto", "break", "case", "char", "const", "continue", "default", 
                                             "do", "double", "else", "enum", "extern", "float", "for", "goto", 
                                             "if", "int", "long", "register", "return", "short", "signed", 
                                             "sizeof", "static", "struct", "switch", "typedef", "union", 
                                             "unsigned", "void", "volatile", "while"};
-    return find(keywords.begin(), keywords.end(), str) != keywords.end();
+    return keywords.count(str);
 }
 
 // Function to check if a character is an operator
@@ -60,6 +62,7 @@ int main() {
 
     return 0;
 }
+
 
 
 

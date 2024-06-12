@@ -38,19 +38,15 @@ void generateParsingTable() {
     for (int i = 0; i < 7; i++) {
         int k = first[i].size();
         for (int j = 0; j < k; j++) {
-            if (first[i][j] != '@') {
                 table[numr(prol[i][0]) + 1][numr(first[i][j]) + 1] = prod[i];
-            }
         }
     }
 
     for (int i = 0; i < 7; i++) {
-        if (pror[i].size() == 1 && pror[i][0] == '@') {
             int k = follow[i].size();
             for (int j = 0; j < k; j++) {
                 table[numr(prol[i][0]) + 1][numr(follow[i][j]) + 1] = prod[i];
             }
-        }
     }
 
     table[0][0] = " ";
@@ -63,8 +59,8 @@ void generateParsingTable() {
     table[2][0] = "A";
     table[3][0] = "B";
     table[4][0] = "C";
-}
 
+}
 // Print the parsing table
 void printParsingTable() {
     cout << "\nPredictive Parsing Table:\n";

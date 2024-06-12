@@ -1,98 +1,84 @@
 #include <iostream>
-#include <cstring>
+#include <string>
+using namespace std;
 
-// Function prototypes
-bool E();
-bool T();
-bool F();
-bool match(char token);
-void error();
+// Define the grammar production rules
+string prol[] = { "S", "A", "A", "B", "B", "C", "C" };
+string pror[] = { "Aa", "Bb", "Cd", "aB", "@", "Cc", "@" };
+string prod[] = { "S-->A", "A-->Bb", "A-->Cd", "B-->aB", "B-->@", "C-->Cc", "C-->" };
+string first[] = { "abcd", "ab", "cd", "a@", "@", "c@", "@" };
+string follow[] = { "$", "$", "$", "a$", "b$", "c$", "d$" };
 
-// Input string and current position
-char input[100];
-int position = 0;
+string table[5][6];
 
-// Main function for parsing
-int main() {
-    std::cout << "Enter an arithmetic expression (using '+' and '*'): ";
-    std::cin >> input;
+// Map characters to their corresponding index
+int numr(char c) {
+    switch (c) {
+        case 'S': return 0;
+        case 'A': return 1;
+        case 'B': return 2;
+        case 'C': return 3;
+        case 'a': return 0;
+        case 'b': return 1;
+        case 'c': return 2;
+        case 'd': return 3;
+        case '$': return 4;
+    }
+    return -1;
+}
 
-    // Start parsing
-    if (E() && position == strlen(input)) {
-        std::cout << "Parsing Successful! The expression is valid." << std::endl;
-    } else {
-        std::cout << "Parsing Error! The expression is invalid." << std::endl;
+// Generate the predictive parsing table
+void generateParsingTable() {
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 6; j++) {
+            table[i][j] = " ";
+        }
     }
 
+    for (int i = 0; i < 7; i++) {
+        int k = first[i].size();
+        for (int j = 0; j < k; j++) {
+            if (first[i][j] != '@') {
+                table[numr(prol[i][0]) + 1][numr(first[i][j]) + 1] = prod[i];
+            }
+        }
+    }
+
+    for (int i = 0; i < 7; i++) {
+        if (pror[i].size() == 1 && pror[i][0] == '@') {
+            int k = follow[i].size();
+            for (int j = 0; j < k; j++) {
+                table[numr(prol[i][0]) + 1][numr(follow[i][j]) + 1] = prod[i];
+            }
+        }
+    }
+
+    table[0][0] = " ";
+    table[0][1] = "a";
+    table[0][2] = "b";
+    table[0][3] = "c";
+    table[0][4] = "d";
+    table[0][5] = "$";
+    table[1][0] = "S";
+    table[2][0] = "A";
+    table[3][0] = "B";
+    table[4][0] = "C";
+}
+
+// Print the parsing table
+void printParsingTable() {
+    cout << "\nPredictive Parsing Table:\n";
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 6; j++) {
+            cout << table[i][j] << "\t";
+            if (j == 5)
+                cout << "\n";
+        }
+    }
+}
+
+int main() {
+    generateParsingTable();
+    printParsingTable();
     return 0;
 }
-
-// Predictive parsing functions
-bool E() {
-    if (T()) {
-        while (input[position] == '+') {
-            position++;
-            if (!T()) {
-                error();
-                return false;
-            }
-        }
-        return true;
-    }
-    return false;
-}
-
-bool T() {
-    if (F()) {
-        while (input[position] == '*') {
-            position++;
-            if (!F()) {
-                error();
-                return false;
-            }
-        }
-        return true;
-    }
-    return false;
-}
-
-bool F() {
-    if (input[position] == '(') {
-        position++;
-        if (E()) {
-            if (input[position] == ')') {
-                position++;
-                return true;
-            }
-        }
-        error();
-        return false;
-    } else if (input[position] >= '0' && input[position] <= '9') {
-        position++;
-        return true;
-    } else {
-        error();
-        return false;
-    }
-}
-
-// Function to match a token
-bool match(char token) {
-    if (input[position] == token) {
-        position++;
-        return true;
-    } else {
-        return false;
-    }
-}
-
-// Function to handle parsing errors
-void error() {
-    std::cerr << "Parsing Error! Unexpected token '" << input[position] << "' at position " << position << std::endl;
-}
-
-
-
-Example:-
-Enter an arithmetic expression (using '+' and '*'): (2+3)*5
-Parsing Successful! The expression is valid.
